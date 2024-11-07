@@ -71,16 +71,16 @@ def test_load_mnist_data():
     x_train, y_train, x_test, y_test = load_mnist_data(verbose=False)
 
     # Check shapes
-    assert x_train.shape[0] == (784, 60000), (
+    assert x_train.shape == (784, 60000), (
         f"Wrong x_train shape: {x_train.shape}"
     )
-    assert y_train.shape[0] == (60000, 1), (
+    assert y_train.shape == (60000, 1), (
         f"Wrong y_train shape: {y_train.shape}"
     )
-    assert x_test.shape[0] == (784, 10000), (
+    assert x_test.shape == (784, 10000), (
         f"Wrong x_test shape: {x_test.shape}"
     )
-    assert y_test.shape[0] == (10000, 1), (
+    assert y_test.shape == (10000, 1), (
         f"Wrong y_train shape: {y_test.shape}"
     )
 
