@@ -58,7 +58,7 @@ class Optimiser(ABC):
             Args:
                 layer: The layer whose weights are being updated
                 grad_weights (np.ndarray): The gradient of the weights
-        """
+            """
             pass
 
         @abstractmethod
@@ -72,7 +72,7 @@ class Optimiser(ABC):
             Args:
                 layer: The layer whose biases are being updated
                 grad_bias (np.ndarray): The gradient of the biases
-        """
+            """
             pass
 
 
