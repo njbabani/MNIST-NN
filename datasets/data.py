@@ -12,7 +12,7 @@ Example:
     x_train, y_train, x_test, y_test = load_mnist_data(verbose=True)
 '''
 
-from tensorflow.keras.datasets import mnist
+import tensorflow as tf
 
 
 def normalise_data(data):
@@ -79,7 +79,7 @@ def load_mnist_data(verbose=True):
     '''
 
     # Load tuples of MNIST data from Keras
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
     # Flatten training and testing images
     x_train = flatten_data(x_train)
