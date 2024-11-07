@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 Testing module for data.py
 
 Functions:
     test_normalise_data(): Raises error if data not normalised
     test_flatten_data(): Raises error if data not flattened
     test_load_mnist_data(): Raises error if MNIST has wrong shapes
-'''
+"""
 
 import numpy as np
 from datasets.data import normalise_data, flatten_data, load_mnist_data
 
 
 def test_normalise_data():
-    '''
+    """
     Test the normalise_data()
 
     Raises:
         AssertionError: If the normalised data is not within the expected range
-    '''
+    """
 
     # Define test shape (784, 10)
     test_shape = (784, 10)
@@ -38,12 +38,12 @@ def test_normalise_data():
 
 
 def test_flatten_data():
-    '''
+    """
     Test the flatten_data()
 
     Raises:
         AssertionError: If the flattened data does not yield expected shapes
-    '''
+    """
 
     # Define test shape (600, 28, 28)
     test_shape = (600, 28, 28)
@@ -62,12 +62,12 @@ def test_flatten_data():
 
 
 def test_load_mnist_data():
-    '''
+    """
     Test the load_mnist_data() by checking entire MNIST dataset
 
     Raises:
         AssertionError: If the loaded data does not yield expected shapes
-    '''
+    """
 
     # Load the MNIST dataset
     x_train, y_train, x_test, y_test = load_mnist_data(verbose=False)
