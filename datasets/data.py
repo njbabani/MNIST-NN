@@ -99,6 +99,8 @@ def load_mnist_data(verbose=True):
         print("y_train shape:", y_train.shape)
         print("x_test shape:", x_test.shape)
         print("y_test shape:", y_test.shape)
+        print("Number of training examples:", x_train.shape[1])
+        print("Number of test examples:", x_test.shape[1])
 
     return x_train, y_train, x_test, y_test
 
