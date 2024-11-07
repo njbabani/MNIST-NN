@@ -61,7 +61,7 @@ def test_flatten_data():
 
 def test_load_mnist_data():
     '''
-    Test the load_mnist_data()
+    Test the load_mnist_data() by checking entire MNIST dataset
 
     Raises:
         AssertionError: If the loaded data does not yield expected shapes
@@ -71,10 +71,18 @@ def test_load_mnist_data():
     x_train, y_train, x_test, y_test = load_mnist_data(verbose=False)
 
     # Check shapes
-    assert x_train.shape[0] == 784, f"Incorrect x_train shape: {x_train.shape}"
-    assert y_train.shape[0] == 10, f"Incorrect y_train shape: {y_train.shape}"
-    assert x_test.shape[0] == 784, f"Incorrect x_test shape: {x_test.shape}"
-    assert y_test.shape[0] == 10, f"Incorrect y_train shape: {y_test.shape}"
+    assert x_train.shape[0] == (784, 60000), (
+        f"Wrong x_train shape: {x_train.shape}"
+    )
+    assert y_train.shape[0] == (60000, 1), (
+        f"Wrong y_train shape: {y_train.shape}"
+    )
+    assert x_test.shape[0] == (784, 10000), (
+        f"Wrong x_test shape: {x_test.shape}"
+    )
+    assert y_test.shape[0] == (10000, 1), (
+        f"Wrong y_train shape: {y_test.shape}"
+    )
 
     print("test_load_mnist_data passed.")
 
