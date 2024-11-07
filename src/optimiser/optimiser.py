@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
 
 """
-Optimiser module to improve NN performance
+This module provides classes for optimisers to improve NN performance
+
+Classes:
+    Optimiser: Abstract base class for optimisers
+    SGD: Implements the Stochastic Gradient Descent (SGD) optimisation
+
+Typical usage example:
+    optimiser = SGD(learning_rate=0.01)
+    optimiser.update_weights(layer, grad_weights)
+    optimiser.update_bias(layer, grad_bias)
 """
 
 from abc import ABC, abstractmethod
