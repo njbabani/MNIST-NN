@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 '''
 Module for loading, normalising and flattening MNIST dataset
+
+Functions:
+    load_mnist_data(verbose=True): Loads the MNIST dataset, prints data shapes
+    flatten_data(data): Flattens the images to a 2D format
+    normalise_data(data): Normalises the dataset to a range of [0, 1]
+
+Example:
+    from datasets.data import load_mnist_data
+    x_train, y_train, x_test, y_test = load_mnist_data(verbose=True)
 '''
 
 from tensorflow.keras.datasets import mnist
@@ -31,7 +40,7 @@ def normalise_data(data):
 
 def flatten_data(data):
     '''
-    Flatten the dataset into (28x28, m) where m is training examples
+    Flatten the dataset into (28x28, m) where m is number of examples
 
     Args:
         data (np.ndarray): Dataset
@@ -41,7 +50,7 @@ def flatten_data(data):
     '''
 
     # Obtain the number of training examples
-    training_examples = data.shape[0]
+    num_examples = data.shape[0]
 
     # MNIST image is square so width = height
     image_width = data.shape[1]
@@ -50,7 +59,7 @@ def flatten_data(data):
     total_pixels = image_width**2
 
     # Flatten the image
-    data_flat = data.reshape(total_pixels, training_examples)
+    data_flat = data.reshape(total_pixels, num_examples)
 
     return data_flat
 
