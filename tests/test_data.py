@@ -30,6 +30,7 @@ def test_normalise_data():
     # Normalise test data
     test_norm = normalise_data(test_array)
 
+    # Check normalisation
     assert test_norm.min() >= 0, f"Incorrect min value: {test_norm.min()}"
     assert test_norm.max() <= 1, f"Incorrect max value: {test_norm.max()}"
 
@@ -53,6 +54,7 @@ def test_flatten_data():
     # Flatten test data
     test_flat = flatten_data(test_array)
 
+    # Check shapes
     assert test_flat.shape[0] == 784, f"Incorrect shape: {test_flat.shape}"
     assert test_flat.shape[1] == 600, f"Incorrect shape: {test_flat.shape}"
 
