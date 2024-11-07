@@ -1,49 +1,50 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 Optimiser module to improve NN performance
-'''
+"""
 
 from abc import ABC, abstractmethod
 import numpy as np
 
 
 class Optimiser(ABC):
-    '''Parent class for optimisers
+    """
+    Parent class for optimisers
 
        Attributes:
             learning_rate (float): Learning rate for the optimiser
             layer_index (int): Index of the current layer being optimised
-    '''
+    """
 
     def __init__(self, learning_rate: float):
-        '''
+        """
         Initialise the optimiser with a learning rate
 
         Args:
             learning_rate (float): The learning rate for the optimiser
-        '''
+        """
         self.learning_rate = learning_rate
         self.layer_index = 0
 
         @property
         def layer_idx(self):
-            '''
+            """
             Gets the index of the current layer
 
             Returns:
                 (int): The index of the layer being optimised
-            '''
+            """
             return self.layer_index
 
         @layer_idx.setter
         def layer_idx(self, layer_number: int):
-            '''
+            """
             Sets the index of the current layer
 
             Args:
                 layer_number (int): The index to set for the layer
-            '''
+            """
             self.layer_index = layer_number
 
         @abstractmethod
@@ -76,25 +77,25 @@ class Optimiser(ABC):
 
 
 class SGD(Optimiser):
-    '''Stochastic Gradient Descent'''
+    """Stochastic Gradient Descent"""
 
     def __init__(self, learning_rate: float):
-        '''
+        """
         Initialise the SGD with a learning rate
 
         Args:
             learning_rate (float): The learning rate for the SGD
-        '''
+        """
         super().__init__(learning_rate)
 
     def update_weights(self, layer, grad_weights: np.ndarray):
-        '''
+        """
         Update weights according to Gradient Descent
 
         Args:
             layer: The layer whose weights are being updated
             grad_weights (np.ndarray): The gradient of the weights
-        '''
+        """
 
         # Handle case if grad_weights is NOT NumPy array
         if not isinstance(grad_weights, np.ndarray):
@@ -105,13 +106,13 @@ class SGD(Optimiser):
         layer.weights -= self.learning_rate * grad_weights
 
     def update_bias(self, layer, grad_bias: np.ndarray):
-        '''
+        """
         Update biases according to Gradient Descent
 
         Args:
             layer: The layer whose biases are being updated
             grad_bias (np.ndarray): The gradient of the biases
-        '''
+        """
 
         # Handle case if grad_bias is NOT NumPy array
         if not isinstance(grad_bias, np.ndarray):
