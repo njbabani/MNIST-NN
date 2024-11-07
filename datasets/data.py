@@ -50,7 +50,9 @@ def flatten_data(data):
     total_pixels = image_width**2
 
     # Flatten the image
-    data.reshape(total_pixels, training_examples)
+    data_flat = data.reshape(total_pixels, training_examples)
+
+    return data_flat
 
 
 def load_mnist_data(verbose=True):
@@ -83,7 +85,7 @@ def load_mnist_data(verbose=True):
     y_test = y_test.reshape(y_test.shape[0], 1)
 
     # Prints the shapes
-    if verbose == True:
+    if verbose:
         print("x_train shape:", x_train.shape)
         print("y_train shape:", y_train.shape)
         print("x_test shape:", x_test.shape)
