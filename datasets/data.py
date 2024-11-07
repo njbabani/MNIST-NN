@@ -24,7 +24,7 @@ def normalise_data(data):
     data_min = data.min()
 
     # Normalise the data
-    data_norm = (data - data_max) / (data - data_min)
+    data_norm = (data - data_min) / (data_max - data_min)
 
     return data_norm
 
