@@ -3,6 +3,8 @@
 Module for loading, normalising and flattening MNIST dataset
 '''
 
+from tensorflow.keras.datasets import mnist
+
 
 def normalise_data(data):
     '''
@@ -49,3 +51,48 @@ def flatten_data(data):
 
     # Flatten the image
     data.reshape(total_pixels, training_examples)
+
+
+def load_mnist_data(verbose=True):
+    '''
+    Load and preprocess the MNIST dataset
+
+    Args:
+        verbose (bool): If true, prints the shapes for features and labels
+
+    Returns:
+        x_train (np.ndarray): Features for training dataset (28x28, m)
+        y_train (np.ndarray): Labels for training dataset (10, m)
+        x_test (np.ndarray): Features for testing dataset (28x28, m)
+        y_test (np.ndarray): Labels for testing dataset (10, m)
+    '''
+
+    # Load tuples of MNIST data from Keras
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+    # Flatten training and testing images
+    x_train = flatten_data(x_train)
+    x_test = flatten_data(x_test)
+
+    # Normalise training and testing images
+    x_train = normalise_data(x_train)
+    x_test = normalise_data(x_test)
+
+    # Ensure digit labels are 2D NumPy arrays
+    y_train = y_train.reshape(y_train.shape[0], 1)
+    y_test = y_test.reshape(y_test.shape[0], 1)
+
+    # Prints the shapes
+    if verbose == True:
+        print("x_train shape:", x_train.shape)
+        print("y_train shape:", y_train.shape)
+        print("x_test shape:", x_test.shape)
+        print("y_test shape:", y_test.shape)
+
+    return x_train, y_train, x_test, y_test
+
+
+if __name__ == "__main__":
+
+    # Loads and prints the MNIST dataset
+    load_mnist_data(verbose=True)
