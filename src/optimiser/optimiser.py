@@ -21,9 +21,9 @@ class Optimiser(ABC):
     """
     Parent class for optimisers
 
-       Attributes:
-            learning_rate (float): Learning rate for the optimiser
-            layer_index (int): Index of the current layer being optimised
+    Attributes:
+        learning_rate (float): Learning rate for the optimiser
+        layer_index (int): Index of the current layer being optimised
     """
 
     def __init__(self, learning_rate: float):
