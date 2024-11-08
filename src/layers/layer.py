@@ -25,7 +25,6 @@ class Layer(ABC):
     Attributes:
         output (np.ndarray): Output of layer after linear forward propagation
     """
-
     @property
     @abstractmethod
     def output(self):
@@ -77,7 +76,6 @@ class Dense(Layer):
         grad_weights (np.ndarray): Gradient of weights after backpropagation.
         grad_bias (np.ndarray): Gradient of biases after backpropagation.
     """
-
     def __init__(self, hidden_units: int):
         """
         Initialises a Dense layer with specified number of hidden units
