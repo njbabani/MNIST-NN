@@ -3,11 +3,11 @@
 """
 This module defines the Differentiable abstract base class, which is used to
 enforce a consistent interface for components in a neural network that need to
-compute gradients.
+compute gradients
 
 Classes:
     Differentiable: Abstract base class requiring the implementation of a
-                    gradient method for any class that inherits from it.
+                    gradient method for any class that inherits from it
 """
 
 from abc import ABC, abstractmethod
@@ -16,12 +16,11 @@ from typing import Any
 
 class Differentiable(ABC):
     """
-    Abstract base class for components that support differentiation.
+    Abstract base class for components that support differentiation
 
-    This class enforces the implementation of a `gradient` method, ensuring
-    that any subclass can compute gradients. This is useful for components
-    like activation functions and loss functions, where gradients are required
-    for backpropagation in neural networks.
+    This class enforces the implementation of a gradient method, ensuring
+    that any subclass can compute gradients - useful for activation functions
+    and loss functions
 
     Methods:
         gradient(*args, **kwargs): Computes the gradient of the function.
