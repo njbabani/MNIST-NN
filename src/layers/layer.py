@@ -28,7 +28,9 @@ class Layer(ABC):
     @property
     @abstractmethod
     def output(self):
-        """np.ndarray: Output of layer after most recent forward pass"""
+        """
+        np.ndarray: Output of layer after most recent forward pass
+        """
         pass
 
     @abstractmethod
@@ -67,14 +69,14 @@ class Layer(ABC):
 
 class Dense(Layer):
     """
-    Fully connected (dense) layer implementation.
+    Fully connected (dense) layer implementation
 
     Attributes:
-        units (int): Number of neurons in the dense layer.
-        weights (np.ndarray): Weights matrix of the layer.
-        bias (np.ndarray): Bias vector of the layer.
-        grad_weights (np.ndarray): Gradient of weights after backpropagation.
-        grad_bias (np.ndarray): Gradient of biases after backpropagation.
+        units (int): Number of neurons in the dense layer
+        weights (np.ndarray): Weights matrix of the layer
+        bias (np.ndarray): Bias vector of the layer
+        grad_weights (np.ndarray): Gradient of weights after backpropagation
+        grad_bias (np.ndarray): Gradient of biases after backpropagation
     """
     def __init__(self, hidden_units: int):
         """
@@ -94,47 +96,65 @@ class Dense(Layer):
 
     @property
     def weights(self):
-        """np.ndarray: The weights of the dense layer"""
+        """
+        np.ndarray: The weights of the dense layer
+        """
         return self._weights
 
     @weights.setter
     def weights(self, weights: np.ndarray):
-        """np.ndarray: Sets the weights"""
+        """
+        np.ndarray: Sets the weights
+        """
         self._weights = weights
 
     @property
     def bias(self):
-        """np.ndarray: The bias of the dense layer"""
+        """
+        np.ndarray: The bias of the dense layer
+        """
         return self._bias
 
     @bias.setter
     def bias(self, bias: np.ndarray):
-        """np.ndarray: Sets the biases"""
+        """
+        np.ndarray: Sets the biases
+        """
         self._bias = bias
 
     @property
     def grad_weights(self):
-        """np.ndarray: Gradient of the weights for backpropagation"""
+        """
+        np.ndarray: Gradient of the weights for backpropagation
+        """
         return self._dw
 
     @grad_weights.setter
     def grad_weights(self, gradients: np.ndarray):
-        """np.ndarray: Sets the gradients of the weights"""
+        """
+        np.ndarray: Sets the gradients of the weights
+        """
         self._dw = gradients
 
     @property
     def grad_bias(self):
-        """np.ndarray: Gradient of the biases for backpropagation"""
+        """
+        np.ndarray: Gradient of the biases for backpropagation
+        """
         return self._db
 
     @grad_bias.setter
     def grad_bias(self, gradients: np.ndarray):
-        """np.ndarray: Sets the gradients of the biases"""
+        """
+        np.ndarray: Sets the gradients of the biases
+        """
         self._db = gradients
 
     @property
     def output(self):
-        """np.ndarray: The output of the dense layer after forward pass."""
+        """
+        np.ndarray: The output of the dense layer after forward pass
+        """
         return self._output
 
     def build(self, data: np.ndarray):
@@ -168,10 +188,10 @@ class Dense(Layer):
 
     def update(self, optimiser: Optimiser):
         """
-        Updates weights and biases using the specified optimiser.
+        Updates weights and biases using the specified optimiser
 
         Args:
-            optimiser (Optimiser): The optimiser used for updating parameters.
+            optimiser (Optimiser): The optimiser used for updating parameters
         """
         optimiser.update_weights(self, self.grad_weights)
         optimiser.update_bias(self, self.grad_bias)
