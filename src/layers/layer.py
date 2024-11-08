@@ -78,7 +78,7 @@ class Dense(Layer):
         grad_bias (np.ndarray): Gradient of biases after backpropagation.
     """
 
-    def __init__(self, hidden_units: int, l2_reg: float = 0.0):
+    def __init__(self, hidden_units: int):
         """
         Initialises a Dense layer with specified number of hidden units
 
@@ -87,7 +87,6 @@ class Dense(Layer):
         """
         super().__init__()
         self._hidden_units = hidden_units
-        self._l2_reg = l2_reg
         self._input_units = None
         self._weights = None
         self._bias = None
@@ -178,16 +177,3 @@ class Dense(Layer):
         """
         optimiser.update_weights(self, self.grad_weights)
         optimiser.update_bias(self, self.grad_bias)
-
-    def regularise(self):
-        """
-        Computes the L2 regularisation term for the layer's weights
-
-        Returns:
-            float: The computed L2 regularisation term. If L2 regularisation is
-            disabled (`_l2_reg` is 0), returns 0.0.
-        """
-
-        if self._l2_reg > 0.0:
-            return self._l2_reg * np.sum(self._weights ** 2)
-        return 0.0
