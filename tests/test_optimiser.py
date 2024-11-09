@@ -17,7 +17,7 @@ from src.optimisation.optimiser import SGD
 
 class TestLayer:
     """
-    Test layer class to simulate a layer with weights and biases.
+    Test layer class to simulate a layer with weights and biases
 
     Attributes:
         weights (np.ndarray): Weights of the layer
@@ -30,7 +30,7 @@ class TestLayer:
 
 
 def test_sgd_update_weights():
-    """Test the update_weights method of SGD optimiser."""
+    """Test the update_weights method of SGD optimiser"""
 
     # Initialise test variables
     learning_rate = 0.01
