@@ -1,0 +1,49 @@
+name: Python Package using Conda
+
+on: [push]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      max-parallel: 5
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-update-conda: true
+        python-version: "3.11"
+        activate-environment: mnist
+
+    - name: Install dependencies
+      run: |
+        conda env update --file env/environments.yml --name mnist
+
+    - name: Lint with flake8
+      run: |
+        conda run -n mnist pip install flake8
+        # stop the build if there are Python syntax errors or undefined names
+        conda run -n mnist flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        conda run -n mnist flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Run tests with pytest and collect coverage
+      run: |
+        conda run -n mnist pip install pytest coverage
+        conda run -n mnist coverage run --source=src -m pytest
+
+    - name: Generate coverage report
+      run: |
+        conda run -n mnist coverage report
+        conda run -n mnist coverage html
+
+    - name: Upload coverage to Coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      run: |
+        conda run -n mnist pip install coveralls
+        conda run -n mnist coveralls
+
