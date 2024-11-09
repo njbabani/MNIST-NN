@@ -8,4 +8,4 @@
 
 Feedforward neural network from scratch for the MNIST dataset
 
-## Install
+## WIP
