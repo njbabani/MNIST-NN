@@ -15,7 +15,7 @@ Typical usage example:
 
 from abc import ABC, abstractmethod
 import numpy as np
-from src.optimiser.optimiser import Optimiser
+from src.optimisation.optimiser import Optimiser
 
 
 class Layer(ABC):
