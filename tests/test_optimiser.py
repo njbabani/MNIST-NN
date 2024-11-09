@@ -15,7 +15,7 @@ import pytest
 from src.optimisation.optimiser import SGD
 
 
-class MockLayer:
+class TestLayer:
     """
     Mock layer class to simulate a layer with weights and biases.
 
@@ -35,7 +35,7 @@ def test_sgd_update_weights():
     # Initialise test variables
     learning_rate = 0.01
     optimiser = SGD(learning_rate=learning_rate)
-    layer = MockLayer(
+    layer = TestLayer(
         weights=np.array([[0.5, -0.2], [0.3, 0.8]]), bias=np.array([0.1, -0.1])
     )
     grad_weights = np.array([[0.1, -0.05], [0.05, 0.2]])
@@ -56,7 +56,7 @@ def test_sgd_update_bias():
     # Initialise test variables
     learning_rate = 0.01
     optimiser = SGD(learning_rate=learning_rate)
-    layer = MockLayer(
+    layer = TestLayer(
         weights=np.array([[0.5, -0.2], [0.3, 0.8]]), bias=np.array([0.1, -0.1])
     )
     grad_bias = np.array([0.05, -0.02])
@@ -77,7 +77,7 @@ def test_update_weights_invalid_grad_type():
     # Initialise test variables
     learning_rate = 0.01
     optimiser = SGD(learning_rate=learning_rate)
-    layer = MockLayer(
+    layer = TestLayer(
         weights=np.array([[0.5, -0.2], [0.3, 0.8]]), bias=np.array([0.1, -0.1])
     )
 
@@ -92,7 +92,7 @@ def test_update_bias_invalid_grad_type():
     # Initialise test variables
     learning_rate = 0.01
     optimiser = SGD(learning_rate=learning_rate)
-    layer = MockLayer(
+    layer = TestLayer(
         weights=np.array([[0.5, -0.2], [0.3, 0.8]]), bias=np.array([0.1, -0.1])
     )
 
