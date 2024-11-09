@@ -30,7 +30,17 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         conda run -n mnist flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-    - name: Test with pytest
+    - name: Run tests with pytest and collect coverage
       run: |
-        conda run -n mnist pip install pytest
-        conda run -n mnist pytest --maxfail=5 --disable-warnings
+        conda run -n mnist pip install pytest coverage
+        conda run -n mnist coverage run --source=src -m pytest
+
+    - name: Generate coverage report
+      run: |
+        conda run -n mnist coverage report
+        conda run -n mnist coverage html
+
+    - name: Upload coverage to Coveralls
+      run: |
+        conda run -n mnist pip install coveralls
+        conda run -n mnist coveralls
