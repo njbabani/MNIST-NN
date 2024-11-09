@@ -25,7 +25,6 @@ class Optimiser(ABC):
         learning_rate (float): Learning rate for the optimiser
         layer_index (int): Index of the current layer being optimised
     """
-
     def __init__(self, learning_rate: float):
         """
         Initialise the optimiser with a learning rate
@@ -87,7 +86,6 @@ class Optimiser(ABC):
 
 class SGD(Optimiser):
     """Stochastic Gradient Descent"""
-
     def __init__(self, learning_rate: float):
         """
         Initialise the SGD with a learning rate
@@ -105,8 +103,6 @@ class SGD(Optimiser):
             layer: The layer whose weights are being updated
             grad_weights (np.ndarray): The gradient of the weights
         """
-
-        # Handle case if grad_weights is NOT NumPy array
         if not isinstance(grad_weights, np.ndarray):
             raise TypeError(
                 f"Incorrect type for grad_weights: {type(grad_weights)}"
@@ -122,8 +118,6 @@ class SGD(Optimiser):
             layer: The layer whose biases are being updated
             grad_bias (np.ndarray): The gradient of the biases
         """
-
-        # Handle case if grad_bias is NOT NumPy array
         if not isinstance(grad_bias, np.ndarray):
             raise TypeError(
                 f"Incorrect type for grad_weights: {type(grad_bias)}"
