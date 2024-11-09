@@ -17,12 +17,12 @@ Typical usage example:
     gradient = relu.gradient(data)
 """
 
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 import numpy as np
-from src.common.differentiable import Differentiable
+from typing import Any
 
 
-class Activation(Differentiable):
+class Activation(ABC):
     """
     Abstract base class for activation functions
 
@@ -42,12 +42,32 @@ class Activation(Differentiable):
         """
         pass
 
+    @abstractmethod
+    def gradient(self, *args, **kwargs) -> Any:
+        """
+        Computes the gradient of the function with respect to its inputs
+
+        Args:
+            *args: Positional arguments for computing the gradient
+            **kwargs: Keyword arguments for computing the gradient
+
+        Returns:
+            Any: The computed gradient (typically NumPy array)
+
+        Raises:
+            NotImplementedError: Subclass did not implement this method
+
+        Example:
+            For an activation function like ReLU, the gradient method would
+            return 1 for positive inputs and 0 for non-positive inputs
+        """
+        raise NotImplementedError("Subclasses must have a gradient method.")
+
 
 class Linear(Activation):
     """
     Implements the linear (identity) activation function
     """
-
     def __call__(self, data: np.ndarray) -> np.ndarray:
         """
         Applies the linear activation function to the data
@@ -77,7 +97,6 @@ class ReLU(Activation):
     """
     Implements the ReLU activation function
     """
-
     def __call__(self, data: np.ndarray) -> np.ndarray:
         """
         Applies the ReLU activation function to the data
@@ -109,7 +128,6 @@ class Sigmoid(Activation):
     """
     Implements the sigmoid activation function
     """
-
     def __call__(self, data: np.ndarray) -> np.ndarray:
         """
         Applies the sigmoid activation function to the data.
@@ -140,7 +158,6 @@ class Tanh(Activation):
     """
     Implements the tanh activation function
     """
-
     def __call__(self, data: np.ndarray) -> np.ndarray:
         """
         Applies the tanh activation function to the data
@@ -171,7 +188,6 @@ class Softmax(Activation):
     """
     Implements the softmax activation function
     """
-
     def __call__(self, data: np.ndarray) -> np.ndarray:
         """
         Applies the softmax activation function to the data
