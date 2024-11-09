@@ -41,6 +41,9 @@ jobs:
         conda run -n mnist coverage html
 
     - name: Upload coverage to Coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: |
         conda run -n mnist pip install coveralls
         conda run -n mnist coveralls
+
