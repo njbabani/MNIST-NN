@@ -17,7 +17,7 @@ from src.optimisation.optimiser import SGD
 
 class TestLayer:
     """
-    Mock layer class to simulate a layer with weights and biases.
+    Test layer class to simulate a layer with weights and biases.
 
     Attributes:
         weights (np.ndarray): Weights of the layer
