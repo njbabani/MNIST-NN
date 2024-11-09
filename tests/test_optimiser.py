@@ -12,7 +12,7 @@ Functions:
 
 import numpy as np
 import pytest
-from src.optimiser.optimiser import SGD
+from src.optimisation.optimiser import SGD
 
 
 class MockLayer:
