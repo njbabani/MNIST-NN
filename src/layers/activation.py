@@ -200,12 +200,12 @@ class Softmax(Activation):
         """
 
         # Prevent numerical overflow by leveraging exponential property
-        exp_data = np.exp(data - data.max())
-        return (exp_data) / np.sum(exp_data, axis=1)
+        exp_data = np.exp(data - np.max(data, axis=1, keepdims=True))
+        return (exp_data) / np.sum(exp_data, axis=1, keepdims=True)
 
     def gradient(self, data: np.ndarray) -> np.ndarray:
         """
-        Vectorised softmax gradient
+        Compute Jacobian of softmax
 
         Args:
             data (np.ndarray): Input data
@@ -213,6 +213,19 @@ class Softmax(Activation):
         Returns:
             np.ndarray: Gradient of softmax
         """
-        softmax_out = self(data)
-        softmax_out = softmax_out.reshape(-1, 1)
-        return np.diagflat(softmax_out) - np.dot(softmax_out, softmax_out.T)
+
+        # Compute the softmax output
+        sfmax = self(data)
+
+        # Initialise gradient matrix
+        grad = np.zeros_like(sfmax)
+
+        # ∂σ(x)_j / ∂x_i = σ(x)_j * (δ_ij - σ(x)_i)
+        for i in range(sfmax.shape[0]):
+            for j in range(sfmax.shape[1]):
+                if i == j:
+                    grad[i, j] = sfmax[i, j] * (1 - sfmax[i, j])
+                else:
+                    grad[i, j] = -sfmax[i, j] * sfmax[i, j]
+
+        return grad
