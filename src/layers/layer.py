@@ -86,13 +86,13 @@ class Dense(Layer):
         self.weights = weights
 
     @property
-    def bias(self):
+    def layer_bias(self):
         """
         np.ndarray: The bias of the dense layer
         """
         return self.bias
 
-    @bias.setter
+    @layer_bias.setter
     def bias(self, bias: np.ndarray):
         """
         np.ndarray: Sets the biases
@@ -142,10 +142,10 @@ class Dense(Layer):
             data (np.ndarray): Input data for determining the shape.
         """
         self.input_units = data.shape[0]
-        random_weights = np.random.randn(self.units, self.input_units)
+        random_weights = np.random.randn(self.hidden_units, self.input_units)
         scaling_factor = np.sqrt(2.0 / self.input_units)
         self.weights = random_weights * scaling_factor
-        self.bias = np.zeros((self.units, 1))
+        self.bias = np.zeros((self.hidden_units, 1))
 
     def __call__(self, data: np.ndarray) -> np.ndarray:
         """
@@ -195,6 +195,7 @@ class Dropout(Layer):
         self.rate = rate
         self.mask = None
         self.training = training
+        self.output = None
 
     @property
     def dropout_rate(self):

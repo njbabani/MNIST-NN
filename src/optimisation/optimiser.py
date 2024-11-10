@@ -9,6 +9,7 @@ Classes:
 """
 
 from abc import ABC, abstractmethod
+from typing import Any
 import numpy as np
 
 
@@ -27,8 +28,8 @@ class Optimiser(ABC):
         Args:
             learning_rate (float): The learning rate for the optimiser
         """
-        self.learning_rate = learning_rate
-        self.layer_index = 0
+        self._learning_rate = learning_rate
+        self._layer_index = 0
 
         @property
         def layer_idx(self):
@@ -38,7 +39,7 @@ class Optimiser(ABC):
             Returns:
                 (int): The index of the layer being optimised
             """
-            return self.layer_index
+            return self._layer_index
 
         @layer_idx.setter
         def layer_idx(self, layer_number: int):
@@ -48,10 +49,10 @@ class Optimiser(ABC):
             Args:
                 layer_number (int): The index to set for the layer
             """
-            self.layer_index = layer_number
+            self._layer_index = layer_number
 
         @abstractmethod
-        def update_weights(self, layer, grad_weights: np.ndarray):
+        def update_weights(self, layer, grad_weights: np.ndarray) -> Any:
             """
             Updates the weights of the specified layer.
 
@@ -65,7 +66,7 @@ class Optimiser(ABC):
             pass
 
         @abstractmethod
-        def update_bias(self, layer, grad_bias: np.ndarray):
+        def update_bias(self, layer, grad_bias: np.ndarray) -> Any:
             """
             Updates the biases of the specified layer
 
@@ -103,7 +104,7 @@ class SGD(Optimiser):
                 f"Incorrect type for grad_weights: {type(grad_weights)}"
                 )
 
-        layer.weights -= self.learning_rate * grad_weights
+        layer.weights -= self._learning_rate * grad_weights
 
     def update_bias(self, layer, grad_bias: np.ndarray):
         """
@@ -118,4 +119,4 @@ class SGD(Optimiser):
                 f"Incorrect type for grad_weights: {type(grad_bias)}"
                 )
 
-        layer.bias -= self.learning_rate * grad_bias
+        layer.bias -= self._learning_rate * grad_bias
