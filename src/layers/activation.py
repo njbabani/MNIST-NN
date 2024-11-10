@@ -198,7 +198,10 @@ class Softmax(Activation):
         Returns:
             np.ndarray: Gives probabilities for different classes
         """
-        return (np.exp(data)) / np.sum(np.exp(data), axis=1)
+
+        # Prevent numerical overflow by leveraging exponential property
+        exp_data = np.exp(data - data.max())
+        return (exp_data) / np.sum(exp_data, axis=1)
 
     def gradient(self, data: np.ndarray) -> np.ndarray:
         """
