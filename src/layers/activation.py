@@ -10,11 +10,6 @@ Classes:
     Sigmoid: Implements the sigmoid activation function
     Tanh: Implements hyperbolic tangent activation function
     Softmax: Implements softmax activation function
-
-Typical usage example:
-    relu = ReLU()
-    output = relu(data)
-    gradient = relu.gradient(data)
 """
 
 from abc import ABC, abstractmethod
