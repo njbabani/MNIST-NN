@@ -10,7 +10,9 @@ Functions:
 """
 
 import numpy as np
-from datasets.data import normalise_data, flatten_data, load_mnist_data
+import pytest
+from datasets.data import normalise_data, flatten_data
+from datasets.data import one_hot_encode, load_mnist_data
 
 
 def test_normalise_data():
@@ -61,6 +63,31 @@ def test_flatten_data():
     print("test_flatten_data passed.")
 
 
+def test_one_hot_encode():
+    """
+    Test the one_hot _encode()
+
+    Raises:
+        AssertionError: If one-hot array does not equal expected result
+    """
+
+    # Initialise test inputs
+    test_labels = np.array([0, 1, 2, 3, 4])
+    test_num_classes = 5
+
+    # Generate one-hot encoded array
+    one_hot_output = one_hot_encode(test_labels, test_num_classes)
+
+    # Define the expected result as identiy matrix
+    ideal_output = np.eye(5)
+
+    for i in range(ideal_output.shape[0]):
+        for j in range(ideal_output.shape[1]):
+            assert (
+                one_hot_output[i, j] == ideal_output[i, j]
+            ), f"Incorrect output: {one_hot_output}"
+
+
 def test_load_mnist_data():
     """
     Test the load_mnist_data() by checking entire MNIST dataset
@@ -69,27 +96,28 @@ def test_load_mnist_data():
         AssertionError: If the loaded data does not yield expected shapes
     """
 
+    # Set the verbose and encode to be False
+    ver = False
+    enc = False
+
     # Load the MNIST dataset
-    x_train, y_train, x_test, y_test = load_mnist_data(verbose=False)
+    x_train, y_train, x_test, y_test = load_mnist_data(ver, enc)
 
     # Check shapes
-    assert x_train.shape == (784, 60000), (
+    assert x_train.shape == (784, 60000), \
         f"Wrong x_train shape: {x_train.shape}"
-    )
-    assert y_train.shape == (60000, 1), (
+
+    assert y_train.shape == (60000, 1), \
         f"Wrong y_train shape: {y_train.shape}"
-    )
-    assert x_test.shape == (784, 10000), (
+
+    assert x_test.shape == (784, 10000), \
         f"Wrong x_test shape: {x_test.shape}"
-    )
-    assert y_test.shape == (10000, 1), (
-        f"Wrong y_train shape: {y_test.shape}"
-    )
+
+    assert y_test.shape == (10000, 1), \
+        f"Wrong y_test shape: {y_test.shape}"
 
     print("test_load_mnist_data passed.")
 
 
 if "__name__" == "__main__":
-    test_normalise_data()
-    test_flatten_data()
-    test_load_mnist_data()
+    pytest.main()
