@@ -175,3 +175,67 @@ class Dense(Layer):
         """
         optimiser.update_weights(self, self.grad_weights)
         optimiser.update_bias(self, self.grad_bias)
+
+
+class Dropout(Layer):
+    """
+    Implements a Dropout layer for regularisation
+
+    Attributes:
+        rate (float): Dropout rate for neurons
+        mask (np.ndarray): A copy used to drop neurons during the forward prop
+    """
+    def __init__(self, rate: float = 0.5):
+        """
+        Initialises the Dropout layer
+
+        Args:
+            rate (float): The fraction of neurons to drop (defaults to 0.5)
+        """
+        if not 0.0 <= rate < 1.0:
+            raise ValueError("Dropout rate must be in the range [0, 1).")
+        self._rate = rate
+        self._mask = None
+        self._training = True
+
+    def __call__(self, data: np.ndarray) -> np.ndarray:
+        """
+        Applies dropout to the input data
+
+        Args:
+            data (np.ndarray): Input data to the layer
+
+        Returns:
+            np.ndarray: Output after applying dropout
+        """
+        if self._training:
+            # Initialise a uniform probability mask with same shape as data
+            prob_mask = np.random.rand(*data.shape)
+
+            # Create a mask where each element is zero with probability `rate`
+            self._mask = (prob_mask > self._rate) / (1.0 - self._rate)
+
+            # Returns element-wise product between scaled neurons and data
+            return data * self._mask
+        else:
+            # No dropout applied during inference
+            return data
+
+    def build(self, data: np.ndarray):
+        """
+        Dropout layer does not need to build weights
+        """
+        pass
+
+    def update(self, optimiser: Optimiser):
+        """
+        Dropout layer does not update weights or biases
+        """
+        pass
+
+    @property
+    def output(self):
+        """
+        np.ndarray: The output after the most recent forward pass
+        """
+        return self._mask
