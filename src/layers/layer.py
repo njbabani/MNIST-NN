@@ -46,26 +46,6 @@ class Layer(ABC):
         """
         pass
 
-    @abstractmethod
-    def build(self, data: np.ndarray):
-        """
-        Builds the layer with weights and biases based on the input shape
-
-        Args:
-            data (np.ndarray): Input data for determining the shape
-        """
-        pass
-
-    @abstractmethod
-    def update(self, optimiser: Optimiser):
-        """
-        Updates the layer's weights and biases based on selected optimiser
-
-        Args:
-            optimiser (Optimiser): The optimiser used to update parameters
-        """
-        pass
-
 
 class Dense(Layer):
     """
