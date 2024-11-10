@@ -29,7 +29,7 @@ def test_linear_activation():
     test_input = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
 
     # Expected gradient output
-    grad_out = np.array([1.0, 1.0, 1.0], [1.0, 1.0, 1.0])
+    grad_out = np.array([[1.0, 1.0, 1.0], [1.0, 1.0, 1.0]])
 
     # Checks if test input matches output of linear function
     np.testing.assert_array_almost_equal(
@@ -57,7 +57,7 @@ def test_relu_activation():
 
     # Expected test and gradient output
     test_out = np.array([[1.0, 2.0, 3.0], [0.0, 0.0, 0.0]])
-    grad_out = np.array([1.0, 1.0, 1.0], [0.0, 0.0, 0.0])
+    grad_out = np.array([[1.0, 1.0, 1.0], [0.0, 0.0, 0.0]])
 
     # Checks if test input matches output of ReLU function
     np.testing.assert_array_almost_equal(
@@ -105,6 +105,9 @@ def test_softmax_activation():
     Test softmax activation function
     """
 
+    # Fixed seed for reproducibility
+    np.random.seed(1)
+
     # Initialise "softmax" test object
     softmax_af = Softmax()
 
@@ -114,16 +117,16 @@ def test_softmax_activation():
     # Expected test output
     test_out = softmax(test_input, axis=1)
 
-    # Intialise grad_out
+    # Initialise grad_out
     grad_out = np.zeros_like(test_input)
 
     # Expected grad output
     for i in range(test_input.shape[0]):
         for j in range(test_input.shape[1]):
             if i == j:
-                grad_out[i, j] = test_out[i] * (1 - test_out[i])
+                grad_out[i, j] = test_out[i, j] * (1 - test_out[i, j])
             else:
-                grad_out[i, j] = -test_out[i] * test_out[j]
+                grad_out[i, j] = -test_out[i, j] * test_out[i, j]
 
     # Checks if test input matches output of sigmoid function
     np.testing.assert_array_almost_equal(
