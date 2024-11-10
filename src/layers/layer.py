@@ -221,18 +221,6 @@ class Dropout(Layer):
             # No dropout applied during inference
             return data
 
-    def build(self, data: np.ndarray):
-        """
-        Dropout layer does not need to build weights
-        """
-        pass
-
-    def update(self, optimiser: Optimiser):
-        """
-        Dropout layer does not update weights or biases
-        """
-        pass
-
     @property
     def output(self):
         """
