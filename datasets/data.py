@@ -13,6 +13,7 @@ Example:
 '''
 
 import tensorflow as tf
+import numpy as np
 
 
 def normalise_data(data):
@@ -64,12 +65,30 @@ def flatten_data(data):
     return data_flat
 
 
-def load_mnist_data(verbose=True):
+def one_hot_encode(labels, num_classes=10):
+    '''
+    One-hot encode the labels for use in
+    Categorical Cross-Entropy (CCE)
+
+    Args:
+        labels (np.ndarray): Array of labels to be encoded
+        num_classes (int): Number of classes (defaults to 10)
+
+    Returns:
+        np.ndarray: One-hot encoded labels
+    '''
+    if np.any(labels >= num_classes):
+        raise ValueError("Labels contain values outside range of num_classes.")
+    return np.eye(num_classes)[labels].T
+
+
+def load_mnist_data(verbose=True, encode=True):
     '''
     Load and preprocess the MNIST dataset
 
     Args:
         verbose (bool): If true, prints the shapes for features and labels
+        encode (bool): If true, performs one-hot encoding for CCE
 
     Returns:
         x_train (np.ndarray): Features for training dataset (28x28, m)
@@ -89,9 +108,14 @@ def load_mnist_data(verbose=True):
     x_train = normalise_data(x_train)
     x_test = normalise_data(x_test)
 
-    # Ensure digit labels are 2D NumPy arrays
-    y_train = y_train.reshape(y_train.shape[0], 1)
-    y_test = y_test.reshape(y_test.shape[0], 1)
+    if encode:
+        # One-hot encode the labels if encode is True
+        y_train = one_hot_encode(y_train, num_classes=10)
+        y_test = one_hot_encode(y_test, num_classes=10)
+    else:
+        # Ensure digit labels are 2D NumPy arrays
+        y_train = y_train.reshape(y_train.shape[0], 1)
+        y_test = y_test.reshape(y_test.shape[0], 1)
 
     # Prints the shapes
     if verbose:
