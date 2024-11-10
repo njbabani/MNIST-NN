@@ -132,10 +132,6 @@ class Dense(Layer):
         """
         np.ndarray: The output of the dense layer after forward pass
         """
-        if self._output is None:
-            raise ValueError(
-                "Output has not been computed yet, run a forward pass first."
-                )
         return self._output
 
     def build(self, data: np.ndarray):
