@@ -51,7 +51,7 @@ def test_sgd_update_weights():
 
 
 def test_sgd_update_bias():
-    """Test the update_bias method of SGD optimiser."""
+    """Test the update_bias method of SGD optimiser"""
 
     # Initialise test variables
     learning_rate = 0.01
@@ -72,7 +72,7 @@ def test_sgd_update_bias():
 
 
 def test_update_weights_invalid_grad_type():
-    """Test update_weights method raises TypeError with wrong gradient type."""
+    """Test update_weights method raises TypeError with wrong gradient type"""
 
     # Initialise test variables
     learning_rate = 0.01
@@ -87,7 +87,7 @@ def test_update_weights_invalid_grad_type():
 
 
 def test_update_bias_invalid_grad_type():
-    """Test update_bias method raises TypeError with invalid gradient type."""
+    """Test update_bias method raises TypeError with invalid gradient type"""
 
     # Initialise test variables
     learning_rate = 0.01
