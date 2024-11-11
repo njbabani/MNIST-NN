@@ -215,7 +215,7 @@ class Softmax(Activation):
         # Initialise gradient matrix
         grad = np.zeros_like(sfmax)
 
-        # ∂σ(x)_j / ∂x_i = σ(x)_j * (δ_ij - σ(x)_i)
+        # d softmax(x)_j / d x_i = softmax(x)_j * (Kron-del_ij - softmax(x)_i)
         for i in range(sfmax.shape[0]):
             for j in range(sfmax.shape[1]):
                 if i == j:
