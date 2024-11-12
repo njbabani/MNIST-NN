@@ -6,7 +6,8 @@ This module defines various cost functions for a NN
 Classes:
     Cost: Abstract parent class for cost functions
     Mean Squared Error (MSE): Used for regression tasks
-    Binary Cross Entropy (BCE): Used for binary classification
+    Binary Cross-Entropy (BCE): Used for binary classification
+    Categorical Cross-Entropy (CCE): Used for multiclass classification
 """
 
 from abc import ABC, abstractmethod
@@ -21,6 +22,7 @@ class Cost(ABC):
     All cost functions must implement the __call__ method
     and a gradient method to compute the derivative of the function
     """
+
     @abstractmethod
     def __call__(self, y_hat: np.ndarray, y: np.ndarray):
         """
@@ -59,9 +61,10 @@ class MSE(Cost):
     """
     Mean Squared Error (MSE) for regression tasks
     """
+
     def __call__(self, y_hat: np.ndarray, y: np.ndarray) -> np.ndarray:
         """
-        Compute the cost for a single example using MSE
+        Compute the cost using MSE
 
         Args:
             y_hat (np.ndarray): The model's predicted outputs
@@ -72,12 +75,12 @@ class MSE(Cost):
         """
 
         # Compute the cost (average loss)
-        cost = np.mean(np.square(y - y_hat), axis=1, keepdims=True)
+        cost = np.mean(np.square(y - y_hat), keepdims=True)
         return cost
 
     def gradient(self, y_hat: np.ndarray, y: np.ndarray) -> np.ndarray:
         """
-        Compute the gradient for MSE (for back prop)
+        Compute the gradient for BCE (for back prop)
 
         Args:
             y_hat (np.ndarray): The model's predicted outputs
@@ -94,11 +97,12 @@ class MSE(Cost):
 
 class BCE(Cost):
     """
-    Binary Cross Entropy (BCE) for binary classification
+    Binary Cross-Entropy (BCE) for binary classification
     """
+
     def __call__(self, y_hat: np.ndarray, y: np.ndarray) -> np.ndarray:
         """
-        Compute the cost for a single example using BCE
+        Compute the cost using BCE
 
         Args:
             y_hat (np.ndarray): The model's predicted outputs
@@ -115,12 +119,14 @@ class BCE(Cost):
         y_hat = np.clip(y_hat, delta, 1 - delta)
 
         # Compute the cost (average loss)
-        cost = -np.mean(y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat))
+        cost = -np.mean(
+            (y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat)), keepdims=True
+        )
         return cost
 
     def gradient(self, y_hat: np.ndarray, y: np.ndarray) -> np.ndarray:
         """
-        Compute the gradient for MSE (for back prop)
+        Compute the gradient for BCE (for back prop)
 
         Args:
             y_hat (np.ndarray): The model's predicted outputs
@@ -137,5 +143,50 @@ class BCE(Cost):
         y_hat = np.clip(y_hat, delta, 1 - delta)
 
         # Compute gradient for BCE
-        grad = - y / y_hat + (1 - y) / (1 - y_hat)
-        return grad
+        grad = -y / y_hat + (1 - y) / (1 - y_hat)
+
+        # Return normalised gradient (keeps mini-batch consistent)
+        return grad / y.shape[1]
+
+
+class CCE(Cost):
+    """
+    Categorical Cross-Entropy (CCE) for multiclass classification
+    """
+
+    def __call__(self, y_hat: np.ndarray, y_hot: np.ndarray) -> np.ndarray:
+        """
+        Compute the cost using CCE
+
+        Args:
+            y_hat (np.ndarray): The model's predicted outputs
+            y_hot (np.ndarray): One-hot encoded true labels
+        """
+
+        # Define small term to prevent division by zero
+        delta = 1e-7
+
+        # Ensure y_hat within range of [delta, 1 - delta]
+        y_hat = np.clip(y_hat, delta, 1 - delta)
+
+        # Compute the cost (avergage loss)
+        cost = -np.mean(np.sum(y_hot * np.log(y_hat), axis=0), keepdims=True)
+        return cost
+
+    def gradient(self, y_hat: np.ndarray, y_hot: np.ndarray) -> np.ndarray:
+        """
+        Compute the gradient for CCE (for back prop)
+
+        Args:
+            y_hat (np.ndarray): The model's predicted outputs
+            y_hot (np.ndarray): One-hot encoded true labels
+
+        Returns:
+            grad (np.ndarray): Gradient of cost function w.r.t y_hat
+        """
+
+        # Implement a simple vectorised gradient for CCE (softmax properties)
+        grad = (y_hat - y_hot)
+
+        # Return normalised gradient (keeps mini-batch consistent)
+        return grad / y_hat.shape[1]
