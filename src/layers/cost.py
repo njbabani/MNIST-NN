@@ -170,7 +170,9 @@ class CCE(Cost):
         y_hat = np.clip(y_hat, delta, 1 - delta)
 
         # Compute the cost (avergage loss)
-        cost = -np.mean(np.sum(y_hot * np.log(y_hat), axis=0), keepdims=True)
+        cost = -np.mean(
+            np.sum(y_hot * np.log(y_hat), axis=0, keepdims=True), keepdims=True
+        )
         return cost
 
     def gradient(self, y_hat: np.ndarray, y_hot: np.ndarray) -> np.ndarray:
