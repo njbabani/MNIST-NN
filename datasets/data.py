@@ -114,8 +114,8 @@ def load_mnist_data(verbose=True, encode=True):
         y_test = one_hot_encode(y_test, num_classes=10)
     else:
         # Ensure digit labels are 2D NumPy arrays
-        y_train = y_train.reshape(y_train.shape[0], 1)
-        y_test = y_test.reshape(y_test.shape[0], 1)
+        y_train = y_train.reshape(1, y_train.shape[0])
+        y_test = y_test.reshape(1, y_test.shape[0])
 
     # Prints the shapes
     if verbose:
