@@ -146,7 +146,7 @@ class BCE(Cost):
         grad = -y / y_hat + (1 - y) / (1 - y_hat)
 
         # Return normalised gradient (keeps mini-batch consistent)
-        return grad / y.shape[1]
+        return grad / y.size
 
 
 class CCE(Cost):
@@ -189,4 +189,4 @@ class CCE(Cost):
         grad = (y_hat - y_hot)
 
         # Return normalised gradient (keeps mini-batch consistent)
-        return grad / y_hat.shape[1]
+        return grad / y_hat.size
