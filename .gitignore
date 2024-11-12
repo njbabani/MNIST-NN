@@ -1,6 +1,7 @@
 # Ignore Python cache directories and files
 __pycache__/
 .pytest_cache/
+src/notebooks/
 *.pyc
 *.pyo
 *.py[cod]
