@@ -18,13 +18,13 @@ class Loss(ABC):
     and a gradient method to compute the derivative of the function
     """
     @abstractmethod
-    def __call__(self, predict: np.ndarray, labels: np.ndarray):
+    def __call__(self, y_hat: np.ndarray, y: np.ndarray):
         """
         Computes the final forward pass using the loss function
 
         Args:
-            predict (np.ndarray): The model's predicted outputs
-            labels (np.ndarray): The ground truth labels
+            y_hat (np.ndarray): The model's predicted outputs
+            y (np.ndarray): The ground truth labels
 
         Returns:
             np.ndarray: The loss for a single example
@@ -55,31 +55,58 @@ class MSE(Loss):
     """
     Mean Squared Error (MSE) for regression tasks
     """
-    def __call__(self, predict: np.ndarray, labels: np.ndarray) -> np.ndarray:
+    def __call__(self, y_hat: np.ndarray, y: np.ndarray) -> np.ndarray:
         """
-        Compute the loss for a single example
+        Compute the loss for a single example using MSE
 
         Args:
-            predict (np.ndarray): The model's predicted outputs
-            labels (np.ndarray): The ground truth labels
+            y_hat (np.ndarray): The model's predicted outputs
+            y (np.ndarray): The ground truth labels
 
         Returns:
             loss (np.ndarray): The loss for a single example
         """
-        loss = np.mean(np.square(labels - predict), axis=1, keepdims=True)
+        loss = np.mean(np.square(y - y_hat), axis=1, keepdims=True)
         return loss
 
-    def gradient(self, predict: np.ndarray, labels: np.ndarray) -> np.ndarray:
+    def gradient(self, y_hat: np.ndarray, y: np.ndarray) -> np.ndarray:
         """
         Compute the gradient for MSE (for back prop)
 
         Args:
-            predict (np.ndarray): The model's predicted outputs
-            labels (np.ndarray): The ground truth labels
+            y_hat (np.ndarray): The model's predicted outputs
+            y (np.ndarray): The ground truth labels
 
         Returns:
             grad (np.ndarray): Gradient of loss function w.r.t y_hat
         """
-        grad = 2 / labels.size * (predict - labels)
+        grad = 2 / y.size * (y_hat - y)
 
         return grad
+
+
+class BCE(Loss):
+    """
+    Binary Cross Entropy (BCE) for binary classification
+    """
+    def __call__(self, y_hat: np.ndarray, y: np.ndarray) -> np.ndarray:
+        """
+        Compute the loss for a single example using BCE
+
+        Args:
+            y_hat (np.ndarray): The model's predicted outputs
+            y (np.ndarray): The ground truth labels
+
+        Returns:
+            loss (np.ndarray): The loss for a single example
+        """
+
+        # Define a small term to prevent log(0) being undefined
+        delta = 1e-7
+
+        # Compute
+        loss = -1 * (
+            y * np.log(y_hat + delta) + (1 - y) * np.log(1 - y_hat + delta)
+        )
+
+        return loss
