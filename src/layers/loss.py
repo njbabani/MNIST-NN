@@ -78,8 +78,8 @@ class MSE(Loss):
             labels (np.ndarray): The ground truth labels
 
         Returns:
-            grad (np.ndarray): Gradient of loss function w.r.t ŷ
+            grad (np.ndarray): Gradient of loss function w.r.t y_hat
         """
-        grad = 2 * (predict - labels) / labels.size
+        grad = 2 / labels.size * (predict - labels)
 
         return grad
