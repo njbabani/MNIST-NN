@@ -2,6 +2,7 @@
 __pycache__/
 .pytest_cache/
 src/notebooks/
+tests/test_model/
 *.pyc
 *.pyo
 *.py[cod]
