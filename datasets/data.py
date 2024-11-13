@@ -129,6 +129,43 @@ def load_mnist_data(verbose=True, encode=True):
     return x_train, y_train, x_test, y_test
 
 
+def train_val_split(x, y, val_ratio=0.2, random_seed=1):
+    """
+    Manually splits data into training and validation sets.
+
+    Args:
+        x (np.ndarray): Input data (features, examples)
+        y (np.ndarray): Labels (classes, examples)
+        val_ratio (float): Fraction of data to use for validation
+        random_seed (int): Seed for reproducibility
+
+    Returns:
+        x_train, y_train, x_val, y_val: Split datasets
+    """
+    # Set random seed for reproducibility
+    np.random.seed(random_seed)
+
+    # Determine number of examples
+    num_examples = x.shape[1]
+
+    # Generate shuffled indices
+    indices = np.arange(num_examples)
+    np.random.shuffle(indices)
+
+    # Calculate the split index
+    val_size = int(num_examples * val_ratio)
+
+    # Split indices into training and validation sets
+    val_indices = indices[:val_size]
+    train_indices = indices[val_size:]
+
+    # Split data based on indices
+    x_train, y_train = x[:, train_indices], y[:, train_indices]
+    x_val, y_val = x[:, val_indices], y[:, val_indices]
+
+    return x_train, y_train, x_val, y_val
+
+
 if __name__ == "__main__":
 
     # Loads and prints the MNIST dataset
