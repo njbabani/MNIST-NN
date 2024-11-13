@@ -55,6 +55,15 @@ class LearningRateScheduler(Callback):
         self.schedule = schedule
         self.verbose = verbose
 
+    def on_epoch_begin(self, epoch: int, logs: dict = None):
+        pass
+
+    def on_train_begin(self, logs: dict = None):
+        pass
+
+    def on_train_end(self, logs: dict = None):
+        pass
+
     def on_epoch_end(self, epoch: int, logs: dict = None):
         """
         Adjusts the learning rate at the end of each epoch
@@ -101,6 +110,15 @@ class ModelCheckpoint(Callback):
         self.mode = mode
         self.verbose = verbose
         self.best = np.inf if mode == "min" else -np.inf
+
+    def on_epoch_begin(self, epoch: int, logs: dict = None):
+        pass
+
+    def on_train_begin(self, logs: dict = None):
+        pass
+
+    def on_train_end(self, logs: dict = None):
+        pass
 
     def on_epoch_end(self, epoch: int, logs: dict = None):
         """
@@ -157,6 +175,15 @@ class EarlyStopping(Callback):
         self.best = np.inf if mode == "min" else -np.inf
         self.wait = 0
 
+    def on_epoch_begin(self, epoch: int, logs: dict = None):
+        pass
+
+    def on_train_begin(self, logs: dict = None):
+        pass
+
+    def on_train_end(self, logs: dict = None):
+        pass
+
     def on_epoch_end(self, epoch: int, logs: dict = None):
         """
         Checks if training should be stopped early
@@ -207,9 +234,16 @@ class ProgbarLogger(Callback):
         self.verbose = verbose
         self.total_epochs = total_epochs
 
+    def on_epoch_begin(self, epoch: int, logs: dict = None):
+        pass
+
     def on_train_begin(self, logs: dict = None):
         if self.verbose and self.total_epochs:
             print("Training started...")
+
+    def on_train_end(self, logs: dict = None):
+        if self.verbose:
+            print("\nTraining complete")
 
     def on_epoch_end(self, epoch: int, logs: dict = None):
         """
@@ -235,7 +269,3 @@ class ProgbarLogger(Callback):
                 f" /{self.total_epochs} - {metrics}"
             )
             sys.stdout.flush()
-
-    def on_train_end(self, logs: dict = None):
-        if self.verbose:
-            print("\nTraining complete\n")
