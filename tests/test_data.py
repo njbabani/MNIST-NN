@@ -6,12 +6,13 @@ Testing module for data.py
 Functions:
     test_normalise_data(): Raises error if data not normalised
     test_flatten_data(): Raises error if data not flattened
+    test_one_hot_encode(): Raises error if data is not encoded properly
     test_load_mnist_data(): Raises error if MNIST has wrong shapes
 """
 
 import numpy as np
 import pytest
-from datasets.data import normalise_data, flatten_data
+from datasets.data import normalise_data, flatten_data, train_val_split
 from datasets.data import one_hot_encode, load_mnist_data
 
 
@@ -36,8 +37,6 @@ def test_normalise_data():
     assert test_norm.min() >= 0, f"Incorrect min value: {test_norm.min()}"
     assert test_norm.max() <= 1, f"Incorrect max value: {test_norm.max()}"
 
-    print("test_normalise_data passed.")
-
 
 def test_flatten_data():
     """
@@ -59,8 +58,6 @@ def test_flatten_data():
     # Check shapes
     assert test_flat.shape[0] == 784, f"Incorrect shape: {test_flat.shape}"
     assert test_flat.shape[1] == 600, f"Incorrect shape: {test_flat.shape}"
-
-    print("test_flatten_data passed.")
 
 
 def test_one_hot_encode():
@@ -116,7 +113,58 @@ def test_load_mnist_data():
     assert y_test.shape == (1, 10000), \
         f"Wrong y_test shape: {y_test.shape}"
 
-    print("test_load_mnist_data passed.")
+
+def test_train_val_split():
+    """
+    Test the train_val_split() function to check if the data is correctly split
+
+    Raises:
+        AssertionError: Split data does not match the expected shape / content
+    """
+    # Define the test shape (features, examples)
+    x_shape = (784, 1000)
+    y_shape = (1, 1000)
+
+    # Generate random test data
+    x_data = np.random.rand(*x_shape)
+    y_data = np.random.randint(0, 10, y_shape)
+
+    # Define validation split ratio
+    val_ratio = 0.2
+
+    # Split the data using your train_val_split function
+    x_train, y_train, x_val, y_val = train_val_split(x_data, y_data, val_ratio)
+
+    # Calculate the expected sizes
+    num_examples = x_shape[1]
+    val_size = int(num_examples * val_ratio)
+    train_size = num_examples - val_size
+
+    # Check shapes of the split datasets
+    assert x_train.shape == (
+        x_shape[0],
+        train_size,
+    ), f"Incorrect x_train shape: {x_train.shape}"
+    assert y_train.shape == (
+        y_shape[0],
+        train_size,
+    ), f"Incorrect y_train shape: {y_train.shape}"
+    assert x_val.shape == (
+        x_shape[0],
+        val_size,
+    ), f"Incorrect x_val shape: {x_val.shape}"
+    assert y_val.shape == (
+        y_shape[0],
+        val_size,
+    ), f"Incorrect y_val shape: {y_val.shape}"
+
+    # Generate indices based on the split data
+    train_indices = set(np.arange(train_size))
+    val_indices = set(np.arange(train_size, num_examples))
+
+    # Check for overlapping indices between train and validation sets
+    assert train_indices.isdisjoint(val_indices), \
+        "Overlap detected between train and validation sets"
 
 
 if "__name__" == "__main__":
