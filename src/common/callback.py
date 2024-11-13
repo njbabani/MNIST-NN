@@ -236,6 +236,6 @@ class ProgbarLogger(Callback):
             )
             sys.stdout.flush()
 
-    def on_train_end(self):
+    def on_train_end(self, logs: dict = None):
         if self.verbose:
             print("\nTraining complete\n")
