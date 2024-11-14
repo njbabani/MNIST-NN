@@ -215,6 +215,18 @@ class Dropout(Layer):
         self._rate = rate
 
     @property
+    def mask(self) -> np.ndarray:
+        """
+        Get the current dropout mask
+
+        The mask should be generated during forward propagation when training
+
+        Returns:
+            np.ndarray: The dropout mask used during training
+        """
+        return self._mask
+
+    @property
     def dropout_training_mode(self):
         return self._training
 
