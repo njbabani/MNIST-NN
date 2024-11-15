@@ -58,11 +58,27 @@ class Activation(ABC):
         """
         raise NotImplementedError("Subclasses must have a gradient method.")
 
+    @property
+    @abstractmethod
+    def output(self) -> np.ndarray:
+        """
+        np.ndarray: Output of layer after most recent forward pass
+        """
+        pass
+
 
 class Linear(Activation):
     """
     Implements the linear (identity) activation function
     """
+    def __init__(self):
+        super().__init__()
+        self._output = None
+
+    @property
+    def output(self):
+        return self._output
+
     def __call__(self, data: np.ndarray) -> np.ndarray:
         """
         Applies the linear activation function to the data
@@ -73,7 +89,8 @@ class Linear(Activation):
         Returns:
             np.ndarray: The same data as the output.
         """
-        return data
+        self._output = data
+        return self._output
 
     def gradient(self, data: np.ndarray) -> np.ndarray:
         """
@@ -92,6 +109,14 @@ class ReLU(Activation):
     """
     Implements the ReLU activation function
     """
+    def __init__(self):
+        super().__init__()
+        self._output = None
+
+    @property
+    def output(self):
+        return self._output
+
     def __call__(self, data: np.ndarray) -> np.ndarray:
         """
         Applies the ReLU activation function to the data
@@ -102,7 +127,8 @@ class ReLU(Activation):
         Returns:
             np.ndarray: Equals to data when data > 0, otherwise 0
         """
-        return np.maximum(data, 0)
+        self._output = np.maximum(data, 0)
+        return self._output
 
     def gradient(self, data: np.ndarray) -> np.ndarray:
         """
@@ -123,6 +149,14 @@ class Sigmoid(Activation):
     """
     Implements the sigmoid activation function
     """
+    def __init__(self):
+        super().__init__()
+        self._output = None
+
+    @property
+    def output(self):
+        return self._output
+
     def __call__(self, data: np.ndarray) -> np.ndarray:
         """
         Applies the sigmoid activation function to the data.
@@ -133,7 +167,8 @@ class Sigmoid(Activation):
         Returns:
             np.ndarray: Transformed output is between 0 and 1
         """
-        return 1.0 / (1 + np.exp(-data))
+        self._output = 1.0 / (1 + np.exp(-data))
+        return self._output
 
     def gradient(self, data: np.ndarray) -> np.ndarray:
         """
@@ -153,6 +188,14 @@ class Tanh(Activation):
     """
     Implements the tanh activation function
     """
+    def __init__(self):
+        super().__init__()
+        self._output = None
+
+    @property
+    def output(self):
+        return self._output
+
     def __call__(self, data: np.ndarray) -> np.ndarray:
         """
         Applies the tanh activation function to the data
@@ -163,7 +206,10 @@ class Tanh(Activation):
         Returns:
             np.ndarray: Transformed output is between -1 and 1
         """
-        return (np.exp(data) - np.exp(-data)) / (np.exp(data) + np.exp(-data))
+        self._output = np.divide(
+            (np.exp(data) - np.exp(-data)), (np.exp(data) + np.exp(-data))
+        )
+        return self._output
 
     def gradient(self, data: np.ndarray) -> np.ndarray:
         """
@@ -183,6 +229,15 @@ class Softmax(Activation):
     """
     Implements the softmax activation function
     """
+    def __init__(self):
+        super().__init__()
+        self._output = None
+
+    @property
+    def output(self):
+        """Return softmax output"""
+        return self._output
+
     def __call__(self, data: np.ndarray) -> np.ndarray:
         """
         Applies the softmax activation function to the data
@@ -196,7 +251,8 @@ class Softmax(Activation):
 
         # Prevent numerical overflow by leveraging exponential property
         exp_data = np.exp(data - np.max(data, axis=1, keepdims=True))
-        return (exp_data) / np.sum(exp_data, axis=1, keepdims=True)
+        self._output = (exp_data) / np.sum(exp_data, axis=1, keepdims=True)
+        return self._output
 
     def gradient(self, data: np.ndarray) -> np.ndarray:
         """
