@@ -124,6 +124,8 @@ class ModelCheckpoint(Callback):
         """
         Saves the model if the monitored metric improves
 
+        `curr` is current monitered metric like loss
+
         Args:
             epoch (int): The current epoch
             logs (dict): A dictionary containing training metrics
@@ -143,7 +145,7 @@ class ModelCheckpoint(Callback):
                 if self.verbose:
                     print(
                         f"\nEpoch {epoch+1}: {self.monitor} "
-                        f"improved to {curr:.5f}"
+                        f"improved to {float(curr.item()):.5f}"
                     )
 
 
