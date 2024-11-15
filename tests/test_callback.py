@@ -59,7 +59,7 @@ def test_model_checkpoint():
     )
 
     # Simulate training epochs with decreasing loss
-    logs = {"loss": 0.5}
+    logs = {"loss": np.array([0.5])}
     for epoch in range(5):
         # Simulate loss reduction
         logs["loss"] *= 0.9
@@ -84,13 +84,13 @@ def test_early_stopping():
         mode="min",
         verbose=True
     )
-    logs = {"loss": 1.0}
+    logs = {"loss": np.array([1.0])}
 
     # Simulate training with no improvement
     with pytest.raises(StopIteration):
         for epoch in range(5):
             # No improvement
-            logs["loss"] = 1.0
+            logs["loss"] = np.array([[1.0]])
             early_stopping.on_epoch_end(epoch, logs)
 
     # Reset for another test with improvement
@@ -98,10 +98,11 @@ def test_early_stopping():
     early_stopping.best = np.inf
 
     # Simulate training with gradual improvement
-    logs = {"loss": 0.5}
+    logs = {"loss": np.array([0.5])}
     for epoch in range(5):
         # Simulate loss reduction
         logs["loss"] *= 0.9
+        print(f"Epoch {epoch + 1}: Loss = {logs['loss'][0]}")
         try:
             early_stopping.on_epoch_end(epoch, logs)
         except StopIteration:
@@ -114,7 +115,7 @@ def test_progbar_logger(capsys):
     """
     total_epochs = 5
     progbar_logger = ProgbarLogger(verbose=True, total_epochs=total_epochs)
-    logs = {"loss": 0.5, "accuracy": 0.8}
+    logs = {"loss": np.array([1.0]), "accuracy": np.array([1.0])}
 
     progbar_logger.on_train_begin()
 
