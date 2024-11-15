@@ -137,6 +137,10 @@ class ModelCheckpoint(Callback):
                     print(f"Warning: {self.monitor} not found in logs")
                 return
 
+            # Convert curr to scalar if numpy array
+            if isinstance(curr, np.ndarray):
+                curr = curr.item()
+
             if (self.mode == "min" and curr < self.best) or (
                 self.mode == "max" and curr > self.best
             ):
@@ -145,7 +149,7 @@ class ModelCheckpoint(Callback):
                 if self.verbose:
                     print(
                         f"\nEpoch {epoch+1}: {self.monitor} "
-                        f"improved to {float(curr.item()):.5f}"
+                        f"improved to {float(curr):.5f}"
                     )
 
 
@@ -194,12 +198,17 @@ class EarlyStopping(Callback):
             epoch (int): The current epoch
             logs (dict): A dictionary containing training metrics
         """
+
         if logs:
             curr = logs.get(self.monitor)
             if curr is None:
                 if self.verbose:
                     print(f"Warning: {self.monitor} not found in logs")
                 return
+
+            # Convert curr to scalar if numpy array
+            if isinstance(curr, np.ndarray):
+                curr = curr.item()
 
             if (self.mode == "min" and curr < self.best) or (
                 self.mode == "max" and curr > self.best
