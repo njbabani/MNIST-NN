@@ -29,55 +29,54 @@ class Optimiser(ABC):
             learning_rate (float): The learning rate for the optimiser
         """
         self._learning_rate = learning_rate
-        self._layer_index = 0
 
-        @property
-        def layer_idx(self):
-            """
-            Gets the index of the current layer
+    @property
+    def learning_rate(self):
+        """
+        Gets the learning rate for optimiser
 
-            Returns:
-                (int): The index of the layer being optimised
-            """
-            return self._layer_index
+        Returns:
+            float: Learning rate
+        """
+        return self._learning_rate
 
-        @layer_idx.setter
-        def layer_idx(self, layer_number: int):
-            """
-            Sets the index of the current layer
+    @learning_rate.setter
+    def learning_rate(self, learning_rate: float):
+        """
+        Sets the learning rate for optimiser
 
-            Args:
-                layer_number (int): The index to set for the layer
-            """
-            self._layer_index = layer_number
+        Args:
+            learning_rate (int): Learning rate
+        """
+        self._layer_index = learning_rate
 
-        @abstractmethod
-        def update_weights(self, layer, grad_weights: np.ndarray) -> Any:
-            """
-            Updates the weights of the specified layer.
+    @abstractmethod
+    def update_weights(self, layer, grad_weights: np.ndarray) -> Any:
+        """
+        Updates the weights of the specified layer.
 
-            This method should be implemented by subclasses to define
-            how the weights are updated based on the gradients
+        This method should be implemented by subclasses to define
+        how the weights are updated based on the gradients
 
-            Args:
-                layer: The layer whose weights are being updated
-                grad_weights (np.ndarray): The gradient of the weights
-            """
-            pass
+        Args:
+            layer: The layer whose weights are being updated
+            grad_weights (np.ndarray): The gradient of the weights
+        """
+        pass
 
-        @abstractmethod
-        def update_bias(self, layer, grad_bias: np.ndarray) -> Any:
-            """
-            Updates the biases of the specified layer
+    @abstractmethod
+    def update_bias(self, layer, grad_bias: np.ndarray) -> Any:
+        """
+        Updates the biases of the specified layer
 
-            This method should be implemented by subclasses to define
-            how the biases are updated based on the gradients
+        This method should be implemented by subclasses to define
+        how the biases are updated based on the gradients
 
-            Args:
-                layer: The layer whose biases are being updated
-                grad_bias (np.ndarray): The gradient of the biases
-            """
-            pass
+        Args:
+            layer: The layer whose biases are being updated
+            grad_bias (np.ndarray): The gradient of the biases
+        """
+        pass
 
 
 class SGD(Optimiser):
