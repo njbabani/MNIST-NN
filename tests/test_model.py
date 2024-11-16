@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Testing module for layers.py
+Testing module for model.py
 
 Functions:
     test_model_initialisation(): Error if model not init properly
