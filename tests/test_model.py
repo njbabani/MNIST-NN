@@ -4,9 +4,12 @@
 Testing module for layers.py
 
 Functions:
-    test_dense(): Error if forward pass or gradients are incorrect
-    test_dropout_training(): Error if Dropout does not drop neurons
-    test_dropout_inference(): Error if Dropout does not pass-through
+    test_model_initialisation(): Error if model not init properly
+    test_forward_pass(): Error if Dropout does not drop neurons
+    test_fit_backpropagation(): Error if either fit or back prop fails
+    test_early_stopping(): Verifies early stopping
+    test_model_checkpoint(): Verifies model checkpoint
+    test_save_load_model(): Verifies if model can be saved/loaded
 """
 
 import numpy as np
@@ -37,10 +40,14 @@ def test_model_initialisation():
 
 def test_forward_pass():
     """
-    Test if the model's forward pass produces the correct output shape.
+    Test if the model's forward pass produces the correct output shape
     """
     np.random.seed(1)
-    X = np.random.randn(5, 10)  # Input shape: (5, 10)
+
+    # Input shape: (5, 10)
+    X = np.random.randn(5, 10)
+
+    # Define hidden layers
     hidden_layers = [
         Dense(32),
         Dropout(),
@@ -50,9 +57,12 @@ def test_forward_pass():
         Dense(3),
         Softmax()
         ]
+
+    # Compile the model
     model = FeedForwardNN(layers=hidden_layers)
     model.compile(loss=CCE(), optimiser=SGD(0.01))
 
+    # Train the model
     output = model(X)
 
     assert output.shape == (3, 10), \
@@ -89,7 +99,7 @@ def test_fit_backpropagation():
 
 def test_early_stopping():
     """
-    Test if the EarlyStopping callback stops training when no improvement.
+    Test if the EarlyStopping callback stops training when no improvement
     """
     np.random.seed(1)
     layers = [Dense(4), ReLU(), Dense(3), Softmax()]
@@ -113,7 +123,7 @@ def test_early_stopping():
 
 def test_model_checkpoint(tmpdir):
     """
-    Test if ModelCheckpoint saves the model correctly.
+    Test if ModelCheckpoint saves the model correctly
     """
     np.random.seed(1)
     layers = [Dense(4), ReLU(), Dense(3), Softmax()]
@@ -143,7 +153,7 @@ def test_model_checkpoint(tmpdir):
 
 def test_save_load_model(tmpdir):
     """
-    Test if the model can be saved and loaded correctly.
+    Test if the model can be saved and loaded correctly
     """
     layers = [Dense(4), ReLU(), Dense(3), Softmax()]
     loss = CCE()
