@@ -208,4 +208,51 @@ class Dense(Layer)
 ```
 
 ## Project Structure
+```plaintext
+MNIST-NN/
+├── datasets/
+│   ├── data.py
+│   └── __init__.py
+├── env/
+│   ├── environments.yml
+│   └── requirements.txt
+├── images/
+│   ├── nn-white.svg
+│   └── nn.svg
+├── src/
+│   ├── common/
+│   │   ├── callback.py
+│   │   ├── utils.py
+│   │   └── __init__.py
+│   ├── layers/
+│   │   ├── activation.py
+│   │   ├── layer.py
+│   │   ├── loss.py
+│   │   └── __init__.py
+│   ├── models/
+│   │   ├── model.py
+│   │   └── __init__.py
+│   └── optimisation/
+│       ├── optimiser.py
+│       └── __init__.py
+├── tests/
+│   ├── test_activation.py
+│   ├── test_callback.py
+│   ├── test_data.py
+│   ├── test_layer.py
+│   ├── test_loss.py
+│   ├── test_model.py
+│   ├── test_optimiser.py
+│   ├── test_utils.py
+│   └── __init__.py
+├── .coverage
+├── .gitignore
+├── CLONE.md
+├── CODE_OF_CONDUCT.md
+├── LICENSE
+├── main.py
+└── README.md
+```
 
+## License
+This project is licensed under the Apache License Version 2.0. See the [LICENSE](LICENSE) file for details.
