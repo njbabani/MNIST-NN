@@ -45,7 +45,7 @@ def test_model_checkpoint():
     """
     Test the ModelCheckpoint callback
     """
-    # Mock a model with a save_model method
+    # Make a mock model with a save_model method
     mock_model = Mock()
     mock_model.save_model = Mock()
 
