@@ -270,13 +270,8 @@ class ProgbarLogger(Callback):
             block = int(round(bar_length * progress))
             progress_bar = "#" * block + "-" * (bar_length - block)
 
-            metrics = ", ".join(
-                f"{key}: {value:.4f}"
-                for key, value in logs.items()
-                if isinstance(value, (int, float))
-            )
             sys.stdout.write(
                 f"\r[{progress_bar}] {int(progress * 100)}% - Epoch {epoch+1}"
-                f" /{self.total_epochs} - {metrics}"
+                f" /{self.total_epochs}"
             )
             sys.stdout.flush()
