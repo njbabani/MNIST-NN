@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """
-This module defines various callback functions for a neural network
+This module defines the neural network architecture
 
 Classes:
-    Callback: Abstract base class for all callbacks
-    LearningRateScheduler: Adjusts learning rate based on epoch
-    ModelCheckpoint: Saves model based on performance metrics
-    EarlyStopping: Stops training if no improvement is observed
-    ProgbarLogger: Displays a progress bar during training
+    Model: Abstract base class for all Neural Networks
+    FeedForwardNN: Feedforward neural network
 """
 
 import pickle
@@ -25,7 +22,7 @@ from src.optimisation.optimiser import Optimiser
 
 class Model(ABC):
     """
-    Abstract base class for neural network models.
+    Abstract base class for neural network models
 
     Attributes:
         layers (List[Layer]): List of layers added to the model
@@ -204,7 +201,7 @@ class FeedForwardNN(Model):
 
     def back_propagate(self, Y: np.ndarray):
         """
-        Performs backpropagation to update the weights and biases of the model.
+        Performs backpropagation to update the weights and biases of the model
 
         Args:
             Y (np.ndarray): Truth labels (shape: output_size x num_examples)
@@ -317,7 +314,7 @@ class FeedForwardNN(Model):
         callbacks: list[Callback] = None,
     ):
         """
-        Trains the model using the provided dataset.
+        Trains the model using the provided dataset
 
         Args:
             X (np.ndarray): Input data (shape: input_size x num_examples)
@@ -418,10 +415,10 @@ class FeedForwardNN(Model):
 
     def save_model(self, filepath: str):
         """
-        Saves the model's parameters (weights, biases) and architecture.
+        Saves the model's parameters (weights, biases) and architecture
 
         Args:
-            filepath (str): Path where the model should be saved.
+            filepath (str): Path where the model should be saved
         """
         # Prepare the data to be saved
         model_data = {
@@ -439,10 +436,10 @@ class FeedForwardNN(Model):
 
     def load_model(self, filepath: str):
         """
-        Loads the model's parameters (weights, biases) and architecture.
+        Loads the model's parameters (weights, biases) and architecture
 
         Args:
-            filepath (str): Path from where the model should be loaded.
+            filepath (str): Path from where the model should be loaded
         """
         with open(filepath, 'rb') as file:
             model_data = pickle.load(file)
