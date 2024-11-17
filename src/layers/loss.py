@@ -71,11 +71,12 @@ class MSE(Loss):
             y (np.ndarray): The ground truth labels
 
         Returns:
-            loss (np.ndarray): The loss for a single example
+            loss (np.ndarray): The average loss
         """
 
         # Compute the loss (average loss)
-        loss = np.mean(np.square(y - y_hat), keepdims=True)
+        loss = np.mean(np.square(y - y_hat))
+
         return loss
 
     def gradient(self, y_hat: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -91,7 +92,8 @@ class MSE(Loss):
         """
 
         # Compute gradient for MSE
-        grad = 2 / y.size * (y_hat - y)
+        grad = 2 * (y_hat - y)
+
         return grad
 
 
@@ -109,7 +111,7 @@ class BCE(Loss):
             y (np.ndarray): The ground truth labels
 
         Returns:
-            loss (np.ndarray): The loss for a single example
+            loss (np.ndarray): The average loss
         """
 
         # Define a small term to prevent log(0) being undefined
@@ -120,7 +122,7 @@ class BCE(Loss):
 
         # Compute the loss (average loss)
         loss = -np.mean(
-            (y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat)), keepdims=True
+            (y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat))
         )
         return loss
 
@@ -145,8 +147,7 @@ class BCE(Loss):
         # Compute gradient for BCE
         grad = -y / y_hat + (1 - y) / (1 - y_hat)
 
-        # Return normalised gradient (keeps mini-batch consistent)
-        return grad / y.size
+        return grad
 
 
 class CCE(Loss):
@@ -161,18 +162,20 @@ class CCE(Loss):
         Args:
             y_hat (np.ndarray): The model's predicted outputs
             y_hot (np.ndarray): One-hot encoded true labels
+
+        Returns:
+            loss (np.ndarray): Average loss
         """
 
         # Define small term to prevent division by zero
-        delta = 1e-7
+        delta = 1e-12
 
         # Ensure y_hat within range of [delta, 1 - delta]
-        y_hat = np.clip(y_hat, delta, 1 - delta)
+        y_hat = np.clip(y_hat, delta, 1.0 - delta)
 
         # Compute the loss (avergage loss)
-        loss = -np.mean(
-            np.sum(y_hot * np.log(y_hat), axis=0, keepdims=True), keepdims=True
-        )
+        loss = -np.sum(y_hot * np.log(y_hat), axis=0)
+        loss = np.mean(loss)
         return loss
 
     def gradient(self, y_hat: np.ndarray, y_hot: np.ndarray) -> np.ndarray:
@@ -190,5 +193,5 @@ class CCE(Loss):
         # Implement a simple vectorised gradient for CCE (softmax properties)
         grad = (y_hat - y_hot)
 
-        # Return normalised gradient (keeps mini-batch consistent)
-        return grad / y_hat.size
+        # Return gradient
+        return grad
