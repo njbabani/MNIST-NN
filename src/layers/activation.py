@@ -249,14 +249,24 @@ class Softmax(Activation):
             np.ndarray: Gives probabilities for different classes
         """
 
+        # Define small value to prevent division by zero
+        delta = 1e-12
+
         # Prevent numerical overflow by leveraging exponential property
-        exp_data = np.exp(data - np.max(data, axis=1, keepdims=True))
-        self._output = (exp_data) / np.sum(exp_data, axis=1, keepdims=True)
+        exp_data = np.exp(data - np.max(data, axis=0, keepdims=True))
+
+        # Compute sum of exponential data along columns with some small delta
+        sum_exp_data = np.sum(exp_data, axis=0, keepdims=True) + delta
+
+        # Compute softmax
+        self._output = exp_data / sum_exp_data
         return self._output
 
     def gradient(self, data: np.ndarray) -> np.ndarray:
         """
         Compute Jacobian of softmax
+
+        This won't be explicitly used as we will use CCE gradient
 
         Args:
             data (np.ndarray): Input data
