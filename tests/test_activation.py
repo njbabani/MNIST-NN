@@ -115,7 +115,7 @@ def test_softmax_activation():
     test_input = np.random.randn(4, 4)
 
     # Expected test output
-    test_out = softmax(test_input, axis=1)
+    test_out = softmax(test_input, axis=0)
 
     # Initialise grad_out
     grad_out = np.zeros_like(test_input)
