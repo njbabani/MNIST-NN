@@ -1,4 +1,4 @@
-![Neural Network Architecture](https://raw.githubusercontent.com/njbabani/MNIST-NN/main/images/nn.svg)
+![Neural Network Architecture](https://raw.githubusercontent.com/njbabani/MNIST-NN/main/images/nn-white.svg)
 
 # MNIST-NN
 
