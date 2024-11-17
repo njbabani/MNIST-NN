@@ -29,7 +29,7 @@ def test_MSE():
     predict = 0.1 + label
 
     # Expected loss output retaining dimensions
-    ideal_loss = np.array([[0.01]])
+    ideal_loss = np.array(0.01)
 
     # Computed MSE loss
     mse_loss = mse(predict, label)
@@ -81,7 +81,6 @@ def test_BCE():
     # Manually calculate the expected loss
     ideal_loss = -np.mean(
         label * np.log(predict) + (1 - label) * np.log(1 - predict),
-        keepdims=True
     )
 
     # Expected gradient using the BCE gradient formula
@@ -139,9 +138,7 @@ def test_CCE():
     predict = np.clip(predict, delta, 1 - delta)
 
     # Manually calculate the expected loss
-    ideal_loss = -np.mean(
-        np.sum(label * np.log(predict), axis=0, keepdims=True), keepdims=True
-    )
+    ideal_loss = -np.mean(np.sum(label * np.log(predict), axis=0))
 
     # Expected gradient using the CCE gradient formula
     ideal_grad = (predict - label)
