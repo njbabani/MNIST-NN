@@ -5,7 +5,7 @@ This module defines the neural network architecture
 
 Classes:
     Model: Abstract base class for all Neural Networks
-    FeedForwardNN: Feedforward neural network
+    FeedForwardNN: Feedforward Neural Network
 """
 
 import pickle
