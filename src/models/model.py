@@ -14,8 +14,9 @@ Classes:
 import pickle
 from abc import ABC, abstractmethod
 import numpy as np
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from src.layers.activation import Activation, Softmax
+from src.common.utils import accuracy_metric
 from src.common.callback import Callback
 from src.layers.layer import Layer, Dense, Dropout
 from src.layers.loss import Loss, CCE
@@ -215,8 +216,16 @@ class FeedForwardNN(Model):
         for index in reversed(range(self._num_layers)):
             layer = self._layers[index]
 
-            # Handle different layer types
-            if isinstance(layer, Dense):
+            if isinstance(layer, Activation):
+                if isinstance(layer, Softmax) and isinstance(self._loss, CCE):
+                    # Use the optimised gradient for softmax + CCE combination
+                    dA = dA
+                else:
+                    # For other activations, propagate the gradient through
+                    dA = dA * layer.gradient(layer.output)
+
+            # Handle Dense types layer
+            elif isinstance(layer, Dense):
                 # For Dense, find the grad w.r.t weights, biases, and inputs
                 if index == 0:
                     prev_layer_output = self._input
@@ -224,13 +233,8 @@ class FeedForwardNN(Model):
                     prev_layer = self._layers[index - 1]
                     prev_layer_output = prev_layer.output
 
-                # Step 3: Calculate dZ if prev layer is an activation layer
-                if index < self._num_layers - 1 and isinstance(
-                    self._layers[index + 1], Activation
-                ):
-                    dZ = dA * self._layers[index + 1].gradient(layer.output)
-                else:
-                    dZ = dA
+                # Step 3: Calculate dZ if layer is Dense
+                dZ = dA
 
                 # Step 4: Calculate gradients for weights and biases
                 layer.grad_weights = np.divide(
@@ -245,25 +249,20 @@ class FeedForwardNN(Model):
                         self._num_examples
                     )
 
-                # Step 6: Update weights and biases using the optimiser
-                self._optimiser.update_weights(layer, layer.grad_weights)
-                self._optimiser.update_bias(layer, layer.grad_bias)
-
-                # Step 7: Calculate dA for the previous layer
+                # Step 6: Calculate dA for the previous layer
                 dA = np.dot(layer.weights.T, dZ)
 
+            # Handle Dropout layer
             elif isinstance(layer, Dropout):
                 # For Dropout layers, adjust dA by the dropout mask
                 if layer.dropout_training_mode:
                     dA *= layer.mask
 
-            elif isinstance(layer, Activation):
-                if isinstance(layer, Softmax) and isinstance(self._loss, CCE):
-                    # Use the optimised gradient for softmax + CCE combination
-                    dA = dA
-                else:
-                    # For other activations, propagate the gradient through
-                    dA = dA * layer.gradient(layer.output)
+        # Step 7: After computing all gradients, update weights and biases
+        for layer in self._layers:
+            if isinstance(layer, Dense):
+                self._optimiser.update_weights(layer, layer.grad_weights)
+                self._optimiser.update_bias(layer, layer.grad_bias)
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -287,7 +286,7 @@ class FeedForwardNN(Model):
 
         return A
 
-    def evaluate(self, X: np.ndarray, Y: np.ndarray) -> np.ndarray:
+    def evaluate(self, X: np.ndarray, Y: np.ndarray) -> Tuple[float, float]:
         """
         Evaluates the model on the given dataset and returns the loss
 
@@ -304,7 +303,10 @@ class FeedForwardNN(Model):
         # Calculate loss
         loss = self._loss(y_hat, Y)
 
-        return loss
+        # Calculate accuracy metric
+        accuracy = accuracy_metric(y_hat, Y)
+
+        return (loss, accuracy)
 
     def fit(
         self,
@@ -345,6 +347,7 @@ class FeedForwardNN(Model):
                 callback.on_epoch_begin(epoch, logs)
 
             epoch_loss = 0
+            correct_predictions = 0
 
             # Shuffle the dataset before each epoch
             indices = np.arange(num_examples)
@@ -367,16 +370,23 @@ class FeedForwardNN(Model):
                 loss = self._loss(predictions, Y_batch)
                 epoch_loss += loss
 
+                # Step 3: Calculate accuracy for the batch
+                predicted_labels = np.argmax(predictions, axis=0)
+                true_labels = np.argmax(Y_batch, axis=0)
+
+                predicted_labels = predicted_labels.flatten()
+                true_labels = true_labels.flatten()
+
+                correct_predictions += np.sum(predicted_labels == true_labels)
+
                 # Step 3: Backward pass and weight update
                 self.back_propagate(Y_batch)
 
             # Average loss for the epoch
             epoch_loss /= num_batches
+            accuracy = correct_predictions / num_examples
             logs["loss"] = epoch_loss
-
-            # Callbacks after each epoch
-            for callback in callbacks:
-                callback.on_epoch_end(epoch, logs)
+            logs["accuracy"] = accuracy
 
             # Update optimiser's learning rate if adjusted by callback
             if (
@@ -385,16 +395,6 @@ class FeedForwardNN(Model):
             ):
                 self._optimiser.learning_rate = logs["learning_rate"]
 
-            # Print progress
-            print(
-                "Epoch {}/{} - Loss: {:.4f} - LR: {:.5f}".format(
-                    epoch + 1,
-                    epochs,
-                    float(epoch_loss.item()),
-                    self._optimiser.learning_rate,
-                )
-            )
-
             # Early stopping or other stopping conditions
             try:
                 for callback in callbacks:
@@ -402,6 +402,15 @@ class FeedForwardNN(Model):
             except StopIteration:
                 print(f"Training stopped early at epoch {epoch + 1}")
                 break
+
+            # Print progress
+            print(
+                " - Loss: {:.4f} - Accuracy: {:.2f} - LR: {:.5f}".format(
+                    float(epoch_loss.item()),
+                    accuracy * 100,
+                    self._optimiser.learning_rate,
+                )
+            )
 
         # Call the on_train_end() for each callback
         for callback in callbacks:
