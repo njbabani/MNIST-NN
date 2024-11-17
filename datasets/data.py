@@ -41,26 +41,28 @@ def normalise_data(data):
 
 def flatten_data(data):
     '''
-    Flatten the dataset into (28x28, m) where m is number of examples
+    Flattens the dataset into shape (n_x, m),
+    where n_x is the number of features (pixels),
+    and m is the number of examples
 
     Args:
-        data (np.ndarray): Dataset
+        data (np.ndarray): Dataset of shape (m, height, width)
 
     Returns:
-        data_flat (np.ndarray) = Flattened dataset
+        data_flat (np.ndarray): Flattened dataset of shape (n_x, m)
     '''
+    # Number of examples
+    m = data.shape[0]  # m examples
 
-    # Obtain the number of training examples
-    num_examples = data.shape[0]
+    # Image dimensions
+    height = data.shape[1]
+    width = data.shape[2]
 
-    # MNIST image is square so width = height
-    image_width = data.shape[1]
+    # Number of features (pixels per image)
+    n_x = height * width  # n_x features
 
-    # Compute total number of pixels in image
-    total_pixels = image_width**2
-
-    # Flatten the image
-    data_flat = data.reshape(total_pixels, num_examples)
+    # Flatten each image individually and transpose
+    data_flat = data.reshape(m, n_x).T  # Shape: (n_x, m)
 
     return data_flat
 
